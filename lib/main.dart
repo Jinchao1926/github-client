@@ -3,37 +3,30 @@ import 'package:flutter_github/pages/explore/explore_page.dart';
 import 'package:flutter_github/pages/home/home_page.dart';
 import 'package:flutter_github/pages/inbox/inbox_page.dart';
 import 'package:flutter_github/pages/profile/profile_page.dart';
+import 'package:flutter_github/themes/index.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => ThemeProvider(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
-      ),
+      debugShowCheckedModeBanner: false,
+      theme: AppTheme.light(),
+      darkTheme: AppTheme.dark(),
+      themeMode: themeProvider.currentTheme,
       home: const MainTabPage(),
     );
   }
@@ -65,16 +58,8 @@ class _MainTabPageState extends State<MainTabPage> {
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: _pages.elementAt(_selectedIndex),
-      ),
+      body: Center(child: _pages.elementAt(_selectedIndex)),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -99,10 +84,10 @@ class _MainTabPageState extends State<MainTabPage> {
           ),
         ],
         currentIndex: _selectedIndex,
-        type: BottomNavigationBarType.fixed,
-        selectedItemColor: Colors.deepPurple,
-        unselectedItemColor: Colors.grey,
-        unselectedFontSize: 14,
+        // type: BottomNavigationBarType.fixed,
+        // selectedItemColor: Colors.deepPurple,
+        // unselectedItemColor: Colors.grey,
+        // unselectedFontSize: 14,
         onTap: _onItemTapped,
       ),
     );

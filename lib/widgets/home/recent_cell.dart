@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_github/themes/index.dart';
 
 class RecentCell extends StatelessWidget {
   final String title;
@@ -11,7 +12,10 @@ class RecentCell extends StatelessWidget {
     return ListTile(
       leading: const Icon(Icons.history, color: Colors.grey),
       title: Text(title),
-      trailing: const Icon(Icons.chevron_right),
+      trailing: Icon(
+        Icons.chevron_right,
+        color: ThemeColors.arrowColor(context),
+      ),
       onTap: onTap,
     );
   }

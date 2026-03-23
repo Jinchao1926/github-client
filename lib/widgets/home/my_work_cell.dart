@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_github/themes/index.dart';
 
 class MyWorkCell extends StatelessWidget {
   final String title;
@@ -15,9 +16,12 @@ class MyWorkCell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: Icon(icon, color: Colors.blue),
+      leading: Icon(icon, color: ThemeColors.primaryColor(context)),
       title: Text(title),
-      trailing: const Icon(Icons.chevron_right),
+      trailing: Icon(
+        Icons.chevron_right,
+        color: ThemeColors.arrowColor(context),
+      ),
       onTap: onTap,
     );
   }
