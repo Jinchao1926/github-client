@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter_github/themes/index.dart';
 
 class HomeSection extends StatelessWidget {
   final String title;
@@ -15,7 +15,7 @@ class HomeSection extends StatelessWidget {
         child: Text(title, style: TextStyle(fontSize: 20)),
       ),
       decoration: BoxDecoration(
-        color: Colors.blueGrey,
+        color: ThemeColors.secondaryBackgroundColor(context),
         borderRadius: BorderRadius.circular(8.0),
       ),
       children: children,
