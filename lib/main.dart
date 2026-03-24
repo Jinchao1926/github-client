@@ -3,8 +3,12 @@ import 'package:flutter_github/pages/explore/explore_page.dart';
 import 'package:flutter_github/pages/home/home_page.dart';
 import 'package:flutter_github/pages/inbox/inbox_page.dart';
 import 'package:flutter_github/pages/profile/profile_page.dart';
+
+import 'package:flutter_github/pages/routes/index.dart';
+
 import 'package:flutter_github/pages/routes/app_routes.dart';
 import 'package:flutter_github/providers/auth_provider.dart';
+
 import 'package:flutter_github/themes/index.dart';
 import 'package:provider/provider.dart';
 
@@ -65,7 +69,8 @@ class _MainTabPageState extends State<MainTabPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(child: _pages.elementAt(_selectedIndex)),
+      // 使用 IndexedStack 保持页面状态
+      body: IndexedStack(index: _selectedIndex, children: _pages),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(

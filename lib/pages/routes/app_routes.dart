@@ -9,6 +9,8 @@ import 'package:flutter_github/pages/home/pull_requests_page.dart';
 import 'package:flutter_github/pages/home/repositories_page.dart';
 import 'package:flutter_github/pages/inbox/inbox_page.dart';
 import 'package:flutter_github/pages/profile/profile_page.dart';
+import 'package:flutter_github/pages/settings/appearance_page.dart';
+import 'package:flutter_github/pages/settings/settings_page.dart';
 import 'route_paths.dart';
 
 class AppRoutes {
@@ -23,6 +25,9 @@ class AppRoutes {
     RoutePaths.projects: (context) => const ProjectsPage(),
     RoutePaths.repositories: (context) => const RepositoriesPage(),
     RoutePaths.organizations: (context) => const OrganizationsPage(),
+    // settings
+    RoutePaths.settings: (context) => const SettingsPage(),
+    RoutePaths.appearance: (context) => const AppearancePage(),
   };
 
   static void pushNamed(
