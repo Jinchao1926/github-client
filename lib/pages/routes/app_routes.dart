@@ -14,14 +14,11 @@ import 'package:flutter_github/pages/settings/settings_page.dart';
 import 'route_paths.dart';
 
 class AppRoutes {
-  // 路由映射
   static Map<String, WidgetBuilder> get routes => {
-    // home
     RoutePaths.home: (context) => const HomePage(),
     RoutePaths.inbox: (context) => const InboxPage(),
     RoutePaths.explore: (context) => const ExplorePage(),
     RoutePaths.profile: (context) => const ProfilePage(),
-    // business
     RoutePaths.issues: (context) => const IssuesPage(),
     RoutePaths.pullRequests: (context) => const PullRequestsPage(),
     RoutePaths.discussions: (context) => const DiscussionsPage(),
@@ -57,7 +54,6 @@ class AppRoutes {
     Navigator.of(context).popUntil(ModalRoute.withName(routeName));
   }
 
-  // 路由生成（用于 MaterialApp 的 onGenerateRoute）
   static Route<dynamic>? onGenerateRoute(RouteSettings settings) {
     final String path = settings.name ?? RoutePaths.home;
     final WidgetBuilder? builder = routes[path];
@@ -66,7 +62,6 @@ class AppRoutes {
       return MaterialPageRoute(builder: builder, settings: settings);
     }
 
-    // 未知路由 404
     return MaterialPageRoute(
       builder: (context) => Scaffold(
         appBar: AppBar(title: const Text('页面不存在')),

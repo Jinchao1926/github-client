@@ -3,14 +3,22 @@ import 'package:flutter_github/pages/explore/explore_page.dart';
 import 'package:flutter_github/pages/home/home_page.dart';
 import 'package:flutter_github/pages/inbox/inbox_page.dart';
 import 'package:flutter_github/pages/profile/profile_page.dart';
+
 import 'package:flutter_github/pages/routes/index.dart';
+
+import 'package:flutter_github/pages/routes/app_routes.dart';
+import 'package:flutter_github/providers/auth_provider.dart';
+
 import 'package:flutter_github/themes/index.dart';
 import 'package:provider/provider.dart';
 
 void main() {
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => ThemeProvider(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
+        ChangeNotifierProvider(create: (_) => AuthProvider()..initialize()),
+      ],
       child: const MyApp(),
     ),
   );
