@@ -4,14 +4,17 @@ import 'package:flutter_github/pages/home/home_page.dart';
 import 'package:flutter_github/pages/inbox/inbox_page.dart';
 import 'package:flutter_github/pages/profile/profile_page.dart';
 import 'package:flutter_github/pages/routes/app_routes.dart';
-import 'package:flutter_github/pages/routes/route_paths.dart';
+import 'package:flutter_github/providers/auth_provider.dart';
 import 'package:flutter_github/themes/index.dart';
 import 'package:provider/provider.dart';
 
 void main() {
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => ThemeProvider(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
+        ChangeNotifierProvider(create: (_) => AuthProvider()..initialize()),
+      ],
       child: const MyApp(),
     ),
   );
@@ -29,7 +32,7 @@ class MyApp extends StatelessWidget {
       theme: AppTheme.light(),
       darkTheme: AppTheme.dark(),
       themeMode: themeProvider.currentTheme,
-      initialRoute: RoutePaths.root,
+      home: const MainTabPage(),
       routes: AppRoutes.routes,
       onGenerateRoute: AppRoutes.onGenerateRoute,
     );
@@ -61,7 +64,6 @@ class _MainTabPageState extends State<MainTabPage> {
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called
     return Scaffold(
       body: Center(child: _pages.elementAt(_selectedIndex)),
       bottomNavigationBar: BottomNavigationBar(
@@ -88,10 +90,6 @@ class _MainTabPageState extends State<MainTabPage> {
           ),
         ],
         currentIndex: _selectedIndex,
-        // type: BottomNavigationBarType.fixed,
-        // selectedItemColor: Colors.deepPurple,
-        // unselectedItemColor: Colors.grey,
-        // unselectedFontSize: 14,
         onTap: _onItemTapped,
       ),
     );
