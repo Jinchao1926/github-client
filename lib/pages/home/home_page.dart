@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_github/pages/home/discussions_page.dart';
-import 'package:flutter_github/pages/home/issues_page.dart';
-import 'package:flutter_github/pages/home/pull_requests_page.dart';
+import 'package:flutter_github/pages/routes/index.dart';
 import 'package:flutter_github/widgets/home/favorites_cell.dart';
 import 'package:flutter_github/widgets/home/home_section.dart';
 import 'package:flutter_github/widgets/home/my_work_cell.dart';
@@ -66,38 +64,46 @@ class HomePage extends StatelessWidget {
       _HomeAction(
         title: 'Issues',
         icon: Icons.error_outline,
-        onTap: () {
-          Navigator.of(
-            context,
-          ).push(MaterialPageRoute(builder: (_) => const IssuesPage()));
-        },
+        onTap: () => AppRoutes.pushNamed(context, RoutePaths.issues),
       ),
       _HomeAction(
         title: 'Pull Requests',
         icon: Icons.merge_type,
-        onTap: () {
-          Navigator.of(
-            context,
-          ).push(MaterialPageRoute(builder: (_) => const PullRequestsPage()));
-        },
+        onTap: () => AppRoutes.pushNamed(context, RoutePaths.pullRequests),
       ),
       _HomeAction(
         title: 'Discussions',
         icon: Icons.forum_outlined,
-        onTap: () {
-          Navigator.of(
-            context,
-          ).push(MaterialPageRoute(builder: (_) => const DiscussionsPage()));
-        },
+        onTap: () => AppRoutes.pushNamed(context, RoutePaths.discussions),
       ),
-      _HomeAction(title: 'Projects', icon: Icons.folder_open, onTap: () {}),
+      _HomeAction(
+        title: 'Projects',
+        icon: Icons.folder_open,
+        onTap: () => AppRoutes.pushNamed(context, RoutePaths.projects),
+      ),
       _HomeAction(
         title: 'Top Repositories',
         icon: Icons.star_border,
-        onTap: () {},
+        onTap: () => AppRoutes.pushNamed(
+          context,
+          RoutePaths.repositories,
+          arguments: {'type': 'top'},
+        ),
       ),
-      _HomeAction(title: 'Organizations', icon: Icons.business, onTap: () {}),
-      _HomeAction(title: 'Starred', icon: Icons.star, onTap: () {}),
+      _HomeAction(
+        title: 'Organizations',
+        icon: Icons.business,
+        onTap: () => AppRoutes.pushNamed(context, RoutePaths.organizations),
+      ),
+      _HomeAction(
+        title: 'Starred',
+        icon: Icons.star,
+        onTap: () => AppRoutes.pushNamed(
+          context,
+          RoutePaths.repositories,
+          arguments: {'type': 'starred'},
+        ),
+      ),
     ];
 
     return actions

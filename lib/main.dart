@@ -3,6 +3,8 @@ import 'package:flutter_github/pages/explore/explore_page.dart';
 import 'package:flutter_github/pages/home/home_page.dart';
 import 'package:flutter_github/pages/inbox/inbox_page.dart';
 import 'package:flutter_github/pages/profile/profile_page.dart';
+import 'package:flutter_github/pages/routes/app_routes.dart';
+import 'package:flutter_github/pages/routes/route_paths.dart';
 import 'package:flutter_github/themes/index.dart';
 import 'package:provider/provider.dart';
 
@@ -27,7 +29,9 @@ class MyApp extends StatelessWidget {
       theme: AppTheme.light(),
       darkTheme: AppTheme.dark(),
       themeMode: themeProvider.currentTheme,
-      home: const MainTabPage(),
+      initialRoute: RoutePaths.root,
+      routes: AppRoutes.routes,
+      onGenerateRoute: AppRoutes.onGenerateRoute,
     );
   }
 }
