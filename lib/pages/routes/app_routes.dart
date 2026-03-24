@@ -14,7 +14,6 @@ import 'route_paths.dart';
 class AppRoutes {
   // 路由映射
   static Map<String, WidgetBuilder> get routes => {
-    RoutePaths.root: (context) => const HomePage(),
     // home
     RoutePaths.home: (context) => const HomePage(),
     RoutePaths.inbox: (context) => const InboxPage(),
