@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_github/pages/routes/index.dart';
 import 'package:flutter_github/widgets/home/favorites_cell.dart';
-import 'package:flutter_github/widgets/home/home_section.dart';
+import 'package:flutter_github/widgets/common/inset_grouped_section.dart';
 import 'package:flutter_github/widgets/home/my_work_cell.dart';
 import 'package:flutter_github/widgets/home/recent_cell.dart';
 import 'package:flutter_github/widgets/home/shortcut_cell.dart';
@@ -25,22 +25,25 @@ class HomePage extends StatelessWidget {
       body: ListView(
         children: [
           _buildSearchBar(),
-          HomeSection(title: 'My Work', children: _buildMyWorkCells(context)),
-          HomeSection(
+          InsetGroupedSection(
+            title: 'My Work',
+            children: _buildMyWorkCells(context),
+          ),
+          InsetGroupedSection(
             title: 'Favorites',
             children: [
               FavoritesCell(title: 'Favorite Repo', onTap: () {}),
               FavoritesCell(title: 'Favorite Org', onTap: () {}),
             ],
           ),
-          HomeSection(
+          InsetGroupedSection(
             title: 'Shortcuts',
             children: [
               ShortcutCell(title: 'Create Issue', onTap: () {}),
               ShortcutCell(title: 'New PR', onTap: () {}),
             ],
           ),
-          HomeSection(
+          InsetGroupedSection(
             title: 'Recent',
             children: [
               RecentCell(title: 'Recently opened repo', onTap: () {}),

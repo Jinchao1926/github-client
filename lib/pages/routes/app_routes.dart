@@ -9,6 +9,8 @@ import 'package:flutter_github/pages/home/pull_requests_page.dart';
 import 'package:flutter_github/pages/home/repositories_page.dart';
 import 'package:flutter_github/pages/inbox/inbox_page.dart';
 import 'package:flutter_github/pages/profile/profile_page.dart';
+import 'package:flutter_github/pages/settings/appearance_page.dart';
+import 'package:flutter_github/pages/settings/settings_page.dart';
 import 'route_paths.dart';
 
 class AppRoutes {
@@ -26,9 +28,11 @@ class AppRoutes {
     RoutePaths.projects: (context) => const ProjectsPage(),
     RoutePaths.repositories: (context) => const RepositoriesPage(),
     RoutePaths.organizations: (context) => const OrganizationsPage(),
+    // settings
+    RoutePaths.settings: (context) => const SettingsPage(),
+    RoutePaths.appearance: (context) => const AppearancePage(),
   };
 
-  // 核心导航方法
   static void pushNamed(
     BuildContext context,
     String routeName, {
@@ -55,7 +59,7 @@ class AppRoutes {
 
   // 路由生成（用于 MaterialApp 的 onGenerateRoute）
   static Route<dynamic>? onGenerateRoute(RouteSettings settings) {
-    final String path = settings.name ?? RoutePaths.root;
+    final String path = settings.name ?? RoutePaths.home;
     final WidgetBuilder? builder = routes[path];
 
     if (builder != null) {
