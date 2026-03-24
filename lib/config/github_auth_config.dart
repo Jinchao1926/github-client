@@ -1,8 +1,28 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 class GitHubAuthConfig {
+  // https://github.com/settings/apps/jinchaohub
+
+  /*
+   * By launch.json
   static const clientId = String.fromEnvironment('GITHUB_CLIENT_ID');
-  static const callbackScheme = 'fluttergithub';
-  static const callbackHost = 'auth';
-  static const authorizationEndpoint = 'https://github.com/login/oauth/authorize';
+  static const clientSecret = String.fromEnvironment('GITHUB_CLIENT_SECRET');
+  static const callbackScheme = String.fromEnvironment(
+    'GITHUB_CALLBACK_SCHEME',
+    defaultValue: 'jinchaohub',
+  );
+  static const callbackHost = String.fromEnvironment(
+    'GITHUB_CALLBACK_HOST',
+    defaultValue: 'oauth-callback',
+  );
+  */
+
+  static String get clientId => dotenv.get('GITHUB_CLIENT_ID');
+  static String get clientSecret => dotenv.get('GITHUB_CLIENT_SECRET');
+  static String get callbackScheme => dotenv.get('GITHUB_CALLBACK_SCHEME');
+  static String get callbackHost => dotenv.get('GITHUB_CALLBACK_HOST');
+  static const authorizationEndpoint =
+      'https://github.com/login/oauth/authorize';
   static const tokenEndpoint = 'https://github.com/login/oauth/access_token';
   static const userEndpoint = 'https://api.github.com/user';
   static const scopes = <String>['read:user', 'user:email'];

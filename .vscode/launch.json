@@ -1,0 +1,17 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Flutter GitHub Auth",
+            "request": "launch",
+            "type": "dart",
+            // "flutterMode": "debug",
+            "args": [
+                "--dart-define=GITHUB_CLIENT_ID=Your_GitHub_Client_ID",
+                "--dart-define=GITHUB_CLIENT_SECRET=Your_GitHub_Client_Secret",
+                "--dart-define=GITHUB_CALLBACK_SCHEME=jinchaohub",
+                "--dart-define=GITHUB_CALLBACK_HOST=oauth-callback"
+            ]
+        }
+    ]
+}
