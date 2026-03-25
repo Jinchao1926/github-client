@@ -2,17 +2,24 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:crypto/crypto.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_web_auth_2/flutter_web_auth_2.dart';
-import 'package:http/http.dart' as http;
 
 import 'package:flutter_github/config/github_auth_config.dart';
 import 'package:flutter_github/models/github_user.dart';
+import 'package:flutter_github/services/api/api_client.dart';
+import 'package:flutter_github/services/api/github_api_service.dart';
 
 class GitHubOAuthService {
-  GitHubOAuthService({http.Client? client}) : _client = client ?? http.Client();
+  GitHubOAuthService({ApiClient? apiClient}) : this._(apiClient ?? ApiClient());
 
-  final http.Client _client;
+  GitHubOAuthService._(ApiClient apiClient)
+    : _apiClient = apiClient,
+      _gitHubApiService = GitHubApiService(apiClient: apiClient);
+
+  final ApiClient _apiClient;
+  final GitHubApiService _gitHubApiService;
 
   static final Random _random = Random.secure();
   static const String _charset =
@@ -90,24 +97,27 @@ class GitHubOAuthService {
       throw Exception('Missing authorization code');
     }
 
-    final response = await _client.post(
-      Uri.parse(GitHubAuthConfig.tokenEndpoint),
-      headers: {'Accept': 'application/json'},
-      body: {
+    final response = await _apiClient.dio.post<Map<String, dynamic>>(
+      GitHubAuthConfig.tokenEndpoint,
+      data: {
         'client_id': GitHubAuthConfig.clientId,
         'client_secret': GitHubAuthConfig.clientSecret,
         'code': code,
         'redirect_uri': GitHubAuthConfig.redirectUri,
         'code_verifier': codeVerifier,
       },
+      options: Options(
+        headers: {'Accept': 'application/json'},
+        contentType: Headers.formUrlEncodedContentType,
+      ),
     );
 
     if (response.statusCode != 200) {
       throw Exception('Failed to exchange token');
     }
 
-    final body = jsonDecode(response.body) as Map<String, dynamic>;
-    final accessToken = body['access_token'] as String?;
+    final body = response.data;
+    final accessToken = body?['access_token'] as String?;
     debugPrint('Token response: $body');
 
     if (accessToken == null || accessToken.isEmpty) {
@@ -117,21 +127,8 @@ class GitHubOAuthService {
     return accessToken;
   }
 
-  Future<GitHubUser> fetchCurrentUser(String accessToken) async {
-    final response = await _client.get(
-      Uri.parse(GitHubAuthConfig.userEndpoint),
-      headers: {
-        'Accept': 'application/vnd.github+json',
-        'Authorization': 'Bearer $accessToken',
-      },
-    );
-
-    if (response.statusCode != 200) {
-      throw Exception('Failed to load GitHub user');
-    }
-
-    return GitHubUser.fromJson(
-      jsonDecode(response.body) as Map<String, dynamic>,
-    );
+  Future<GitHubUser> fetchCurrentUser() async {
+    final user = await _gitHubApiService.getCurrentUser();
+    return GitHubUser.fromJson(user);
   }
 }

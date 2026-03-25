@@ -23,7 +23,7 @@ class FakeGitHubOAuthService extends GitHubOAuthService {
   }
 
   @override
-  Future<GitHubUser> fetchCurrentUser(String accessToken) async {
+  Future<GitHubUser> fetchCurrentUser() async {
     if (error != null) throw error!;
     return userToReturn!;
   }

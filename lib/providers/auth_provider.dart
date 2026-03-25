@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 import 'package:flutter_github/models/github_user.dart';
+import 'package:flutter_github/services/api/api_client.dart';
 import 'package:flutter_github/services/auth/github_oauth_service.dart';
 import 'package:flutter_github/services/storage/secure_storage_service.dart';
 
@@ -8,8 +9,14 @@ class AuthProvider extends ChangeNotifier {
   AuthProvider({
     GitHubOAuthService? authService,
     SecureStorageService? storageService,
-  }) : _authService = authService ?? GitHubOAuthService(),
-       _storageService = storageService ?? SecureStorageService();
+  }) : _storageService = storageService ?? SecureStorageService(),
+       _authService =
+           authService ??
+           GitHubOAuthService(
+             apiClient: ApiClient(
+               tokenProvider: (storageService ?? SecureStorageService()).readAccessToken,
+             ),
+           );
 
   final GitHubOAuthService _authService;
   final SecureStorageService _storageService;
@@ -37,7 +44,7 @@ class AuthProvider extends ChangeNotifier {
         return;
       }
 
-      _user = await _authService.fetchCurrentUser(token);
+      _user = await _authService.fetchCurrentUser();
     } catch (_) {
       await _storageService.deleteAccessToken();
       _user = null;
@@ -55,7 +62,7 @@ class AuthProvider extends ChangeNotifier {
     try {
       final token = await _authService.signIn();
       await _storageService.writeAccessToken(token);
-      _user = await _authService.fetchCurrentUser(token);
+      _user = await _authService.fetchCurrentUser();
     } catch (error) {
       _user = null;
       _errorMessage = error.toString().replaceFirst('Exception: ', '');

@@ -1,0 +1,19 @@
+import 'package:flutter_github/services/api/api_client.dart';
+
+class GitHubApiService {
+  GitHubApiService({ApiClient? apiClient})
+    : _apiClient = apiClient ?? ApiClient();
+
+  final ApiClient _apiClient;
+
+  Future<Map<String, dynamic>> getCurrentUser() async {
+    final response = await _apiClient.dio.get<Map<String, dynamic>>('/user');
+    final body = response.data;
+
+    if (response.statusCode != 200 || body == null) {
+      throw Exception('Failed to load GitHub user');
+    }
+
+    return body;
+  }
+}
