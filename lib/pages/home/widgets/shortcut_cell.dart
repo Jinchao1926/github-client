@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_github/pages/home/widgets/list_cell.dart';
+import 'package:flutter_github/widgets/common/list_cell.dart';
 
 class ShortcutCell extends ListCell {
   const ShortcutCell({super.key, required super.title, required super.onTap})

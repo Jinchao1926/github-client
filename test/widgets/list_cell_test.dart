@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:flutter_github/pages/home/widgets/list_cell.dart';
+import 'package:flutter_github/widgets/common/list_cell.dart';
 
 void main() {
   testWidgets('ListCell shows detail value before chevron', (

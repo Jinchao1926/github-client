@@ -28,7 +28,10 @@ class ListCell extends StatelessWidget {
           if (detail != null) ...[
             Text(
               detail!,
-              style: TextStyle(color: ThemeColors.secondaryTextColor(context)),
+              style: TextStyle(
+                fontSize: 16,
+                color: ThemeColors.secondaryTextColor(context),
+              ),
             ),
             if (showChevron) const SizedBox(width: 4),
           ],

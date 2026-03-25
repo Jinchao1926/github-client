@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_github/pages/routes/index.dart';
-import 'package:flutter_github/pages/home/widgets/list_cell.dart';
-import 'package:flutter_github/widgets/home/favorites_cell.dart';
-import 'package:flutter_github/pages/home/widgets/inset_grouped_section.dart';
-import 'package:flutter_github/widgets/home/my_work_cell.dart';
-import 'package:flutter_github/widgets/home/recent_cell.dart';
-import 'package:flutter_github/widgets/home/shortcut_cell.dart';
+import 'package:flutter_github/widgets/common/list_cell.dart';
+import 'package:flutter_github/pages/home/widgets/favorites_cell.dart';
+import 'package:flutter_github/widgets/common/inset_grouped_section.dart';
+import 'package:flutter_github/pages/home/widgets/my_work_cell.dart';
+import 'package:flutter_github/pages/home/widgets/recent_cell.dart';
+import 'package:flutter_github/pages/home/widgets/shortcut_cell.dart';
 
 class _HomeAction {
   final String title;

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_github/pages/routes/index.dart';
-import 'package:flutter_github/pages/home/widgets/inset_grouped_section.dart';
-import 'package:flutter_github/pages/home/widgets/list_cell.dart';
+import 'package:flutter_github/themes/index.dart';
+import 'package:flutter_github/widgets/common/inset_grouped_section.dart';
+import 'package:flutter_github/widgets/common/list_cell.dart';
+import 'package:provider/provider.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -16,7 +18,7 @@ class SettingsPage extends StatelessWidget {
             children: [
               ListCell(
                 title: 'Appearance',
-                detail: 'Dark',
+                detail: Provider.of<ThemeProvider>(context).currentTheme.name,
                 onTap: () {
                   AppRoutes.pushNamed(context, RoutePaths.appearance);
                 },
