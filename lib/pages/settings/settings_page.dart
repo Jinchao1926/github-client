@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_github/pages/routes/index.dart';
+import 'package:flutter_github/themes/index.dart';
 import 'package:flutter_github/widgets/common/inset_grouped_section.dart';
+import 'package:flutter_github/widgets/common/list_cell.dart';
+import 'package:provider/provider.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -13,35 +16,31 @@ class SettingsPage extends StatelessWidget {
         children: [
           InsetGroupedSection(
             children: [
-              ListTile(
-                title: const Text('Appearance'),
-                trailing: const Icon(Icons.chevron_right),
+              ListCell(
+                title: 'Appearance',
+                detail: Provider.of<ThemeProvider>(context).currentTheme.name,
                 onTap: () {
                   AppRoutes.pushNamed(context, RoutePaths.appearance);
                 },
               ),
-              ListTile(title: const Text('App Icon'), onTap: () {}),
-              ListTile(title: const Text('App Language'), onTap: () {}),
-              ListTile(title: const Text('Notification'), onTap: () {}),
-              ListTile(title: const Text('Code Options'), onTap: () {}),
-              ListTile(title: const Text('External Links'), onTap: () {}),
+              ListCell(title: 'App Icon', onTap: () {}),
+              ListCell(title: 'App Language', onTap: () {}),
+              ListCell(title: 'Notification', onTap: () {}),
+              ListCell(title: 'Code Options', onTap: () {}),
+              ListCell(title: 'External Links', onTap: () {}),
             ],
           ),
           InsetGroupedSection(
             children: [
-              ListTile(title: const Text('Copilot'), onTap: () {}),
-              ListTile(title: const Text('Copilot Pro'), onTap: () {}),
+              ListCell(title: 'Copilot', onTap: () {}),
+              ListCell(title: 'Copilot Pro', onTap: () {}),
             ],
           ),
           InsetGroupedSection(
-            children: [
-              ListTile(title: const Text('Share Feedback'), onTap: () {}),
-            ],
+            children: [ListCell(title: 'Share Feedback', onTap: () {})],
           ),
           InsetGroupedSection(
-            children: [
-              ListTile(title: const Text('Terms of Service'), onTap: () {}),
-            ],
+            children: [ListCell(title: 'Terms of Service', onTap: () {})],
           ),
         ],
       ),
