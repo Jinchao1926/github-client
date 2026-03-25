@@ -1,28 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_github/themes/index.dart';
+import 'package:flutter_github/pages/home/widgets/list_cell.dart';
 
-class MyWorkCell extends StatelessWidget {
-  final String title;
-  final IconData icon;
-  final VoidCallback onTap;
-
-  const MyWorkCell({
+class MyWorkCell extends ListCell {
+  MyWorkCell({
     super.key,
-    required this.title,
-    required this.icon,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      leading: Icon(icon, color: ThemeColors.primaryColor(context)),
-      title: Text(title),
-      trailing: Icon(
-        Icons.chevron_right,
-        color: ThemeColors.arrowColor(context),
-      ),
-      onTap: onTap,
-    );
-  }
+    required IconData icon,
+    required super.title,
+    required super.onTap,
+  }) : super(leading: Icon(icon));
 }
