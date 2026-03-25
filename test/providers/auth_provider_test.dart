@@ -18,7 +18,7 @@ class FakeGitHubOAuthService extends GitHubOAuthService {
   }
 
   @override
-  Future<GitHubUser> fetchCurrentUser(String accessToken) async {
+  Future<GitHubUser> fetchCurrentUser() async {
     if (error != null) throw error!;
     return userToReturn!;
   }
@@ -65,6 +65,18 @@ void main() {
 
     expect(provider.isAuthenticated, isFalse);
     expect(provider.user, isNull);
+  });
+
+  test('initialize restores user from stored token', () async {
+    final provider = AuthProvider(
+      authService: FakeGitHubOAuthService(userToReturn: user),
+      storageService: FakeSecureStorageService(initialToken: 'stored-token'),
+    );
+
+    await provider.initialize();
+
+    expect(provider.isAuthenticated, isTrue);
+    expect(provider.user?.login, 'octocat');
   });
 
   test('signIn stores token and user on success', () async {

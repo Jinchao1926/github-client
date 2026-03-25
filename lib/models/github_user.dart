@@ -1,3 +1,8 @@
+import 'package:json_annotation/json_annotation.dart';
+
+part 'github_user.g.dart';
+
+@JsonSerializable()
 class GitHubUser {
   const GitHubUser({
     required this.login,
@@ -8,15 +13,12 @@ class GitHubUser {
 
   final String login;
   final String? name;
+  @JsonKey(name: 'avatar_url')
   final String avatarUrl;
   final String? bio;
 
-  factory GitHubUser.fromJson(Map<String, dynamic> json) {
-    return GitHubUser(
-      login: json['login'] as String,
-      name: json['name'] as String?,
-      avatarUrl: json['avatar_url'] as String,
-      bio: json['bio'] as String?,
-    );
-  }
+  factory GitHubUser.fromJson(Map<String, dynamic> json) =>
+      _$GitHubUserFromJson(json);
+
+  Map<String, dynamic> toJson() => _$GitHubUserToJson(this);
 }
