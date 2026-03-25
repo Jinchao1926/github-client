@@ -14,47 +14,44 @@ class AppearancePage extends StatelessWidget {
         builder: (context, themeProvider, child) {
           final currentTheme = themeProvider.currentTheme;
 
-          return InsetGroupedSection(
-            children: [
-              RadioGroup<ThemeMode>(
-                groupValue: currentTheme,
-                onChanged: (value) {
-                  switch (value) {
-                    case ThemeMode.system:
-                      themeProvider.setSystemTheme();
-                      break;
-                    case ThemeMode.dark:
-                      themeProvider.setDarkTheme();
-                      break;
-                    default:
-                      themeProvider.setLightTheme();
-                      break;
-                  }
-                },
-                child: Column(
-                  children: const [
-                    RadioListTile<ThemeMode>(
-                      key: ValueKey('theme_auto'),
-                      value: ThemeMode.system,
-                      title: Text('Automatic'),
-                      controlAffinity: ListTileControlAffinity.trailing,
-                    ),
-                    RadioListTile<ThemeMode>(
-                      key: ValueKey('theme_dark'),
-                      value: ThemeMode.dark,
-                      title: Text('Dark'),
-                      controlAffinity: ListTileControlAffinity.trailing,
-                    ),
-                    RadioListTile<ThemeMode>(
-                      key: ValueKey('theme_light'),
-                      value: ThemeMode.light,
-                      title: Text('Light'),
-                      controlAffinity: ListTileControlAffinity.trailing,
-                    ),
-                  ],
+          return RadioGroup<ThemeMode>(
+            groupValue: currentTheme,
+            onChanged: (value) {
+              switch (value) {
+                case ThemeMode.system:
+                  themeProvider.setSystemTheme();
+                  break;
+                case ThemeMode.dark:
+                  themeProvider.setDarkTheme();
+                  break;
+                default:
+                  themeProvider.setLightTheme();
+                  break;
+              }
+            },
+            child: InsetGroupedSection(
+              dividerAlignLeft: true,
+              children: const [
+                RadioListTile<ThemeMode>(
+                  key: ValueKey('theme_auto'),
+                  value: ThemeMode.system,
+                  title: Text('Automatic'),
+                  controlAffinity: ListTileControlAffinity.trailing,
                 ),
-              ),
-            ],
+                RadioListTile<ThemeMode>(
+                  key: ValueKey('theme_dark'),
+                  value: ThemeMode.dark,
+                  title: Text('Dark'),
+                  controlAffinity: ListTileControlAffinity.trailing,
+                ),
+                RadioListTile<ThemeMode>(
+                  key: ValueKey('theme_light'),
+                  value: ThemeMode.light,
+                  title: Text('Light'),
+                  controlAffinity: ListTileControlAffinity.trailing,
+                ),
+              ],
+            ),
           );
         },
       ),
