@@ -19,6 +19,7 @@ class SettingsPage extends StatelessWidget {
       body: ListView(
         children: [
           InsetGroupedSection(
+            dividerAlignLeft: true,
             children: [
               ListCell(
                 title: 'Appearance',
@@ -35,6 +36,7 @@ class SettingsPage extends StatelessWidget {
             ],
           ),
           InsetGroupedSection(
+            dividerAlignLeft: true,
             children: [
               ListCell(title: 'Copilot', detail: 'Copilot Free'),
               ListCell(title: 'Copilot Pro'),
@@ -42,6 +44,7 @@ class SettingsPage extends StatelessWidget {
           ),
           InsetGroupedSection(children: [ListCell(title: 'Share Feedback')]),
           InsetGroupedSection(
+            dividerAlignLeft: true,
             children: [
               ListCell(title: 'Terms of Service'),
               ListCell(title: 'Privacy Policy & Analytics'),
@@ -49,6 +52,7 @@ class SettingsPage extends StatelessWidget {
           ),
           InsetGroupedSection(children: [ListCell(title: 'Feature Preview')]),
           InsetGroupedSection(
+            dividerAlignLeft: true,
             children: [
               ListCell(title: 'Manage Accounts'),
               ListCell(title: 'App Lock'),

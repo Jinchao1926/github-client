@@ -3,6 +3,7 @@ import 'package:flutter_github/themes/index.dart';
 
 class ListCell extends StatelessWidget {
   final String title;
+  final String? subtitle;
   final Widget? leading;
   final String? detail;
   final bool showChevron;
@@ -11,6 +12,7 @@ class ListCell extends StatelessWidget {
   const ListCell({
     super.key,
     required this.title,
+    this.subtitle,
     this.leading,
     this.detail,
     this.showChevron = true,
@@ -22,6 +24,7 @@ class ListCell extends StatelessWidget {
     return ListTile(
       leading: leading,
       title: Text(title),
+      subtitle: subtitle != null ? Text(subtitle!) : null,
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
