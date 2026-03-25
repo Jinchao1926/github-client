@@ -6,7 +6,7 @@ class ListCell extends StatelessWidget {
   final Widget? leading;
   final String? detail;
   final bool showChevron;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   const ListCell({
     super.key,
@@ -14,7 +14,7 @@ class ListCell extends StatelessWidget {
     this.leading,
     this.detail,
     this.showChevron = true,
-    required this.onTap,
+    this.onTap,
   });
 
   @override
