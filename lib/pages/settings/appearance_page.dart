@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_github/themes/index.dart';
+import 'package:flutter_github/widgets/common/inset_grouped_section.dart';
 import 'package:provider/provider.dart';
 
 class AppearancePage extends StatelessWidget {
@@ -9,61 +10,53 @@ class AppearancePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Appearance')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Theme Mode',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 12),
-            Consumer<ThemeProvider>(
-              builder: (context, themeProvider, child) {
-                return Column(
-                  children: [
+      body: Consumer<ThemeProvider>(
+        builder: (context, themeProvider, child) {
+          final currentTheme = themeProvider.currentTheme;
+
+          return InsetGroupedSection(
+            children: [
+              RadioGroup<ThemeMode>(
+                groupValue: currentTheme,
+                onChanged: (value) {
+                  switch (value) {
+                    case ThemeMode.system:
+                      themeProvider.setSystemTheme();
+                      break;
+                    case ThemeMode.dark:
+                      themeProvider.setDarkTheme();
+                      break;
+                    default:
+                      themeProvider.setLightTheme();
+                      break;
+                  }
+                },
+                child: Column(
+                  children: const [
                     RadioListTile<ThemeMode>(
-                      title: const Text('Automatic'),
+                      key: ValueKey('theme_auto'),
                       value: ThemeMode.system,
-                      groupValue: themeProvider.currentTheme,
-                      onChanged: (value) {
-                        if (value != null) {
-                          themeProvider.setSystemTheme();
-                        }
-                      },
+                      title: Text('Automatic'),
+                      controlAffinity: ListTileControlAffinity.trailing,
                     ),
                     RadioListTile<ThemeMode>(
-                      title: const Text('Light'),
-                      value: ThemeMode.light,
-                      groupValue: themeProvider.currentTheme,
-                      onChanged: (value) {
-                        if (value != null) {
-                          themeProvider.setLightTheme();
-                        }
-                      },
-                    ),
-                    RadioListTile<ThemeMode>(
-                      title: const Text('Dark'),
+                      key: ValueKey('theme_dark'),
                       value: ThemeMode.dark,
-                      groupValue: themeProvider.currentTheme,
-                      onChanged: (value) {
-                        if (value != null) {
-                          themeProvider.setDarkTheme();
-                        }
-                      },
+                      title: Text('Dark'),
+                      controlAffinity: ListTileControlAffinity.trailing,
+                    ),
+                    RadioListTile<ThemeMode>(
+                      key: ValueKey('theme_light'),
+                      value: ThemeMode.light,
+                      title: Text('Light'),
+                      controlAffinity: ListTileControlAffinity.trailing,
                     ),
                   ],
-                );
-              },
-            ),
-            const SizedBox(height: 20),
-            Text(
-              'Current theme: ${Provider.of<ThemeProvider>(context).currentTheme.name}',
-              style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
-            ),
-          ],
-        ),
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }
