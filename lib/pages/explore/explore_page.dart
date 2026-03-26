@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_github/l10n/l10n.dart';
 
 class ExplorePage extends StatelessWidget {
   const ExplorePage({super.key});
@@ -6,8 +7,8 @@ class ExplorePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Explore')),
-      body: Center(child: Text('Welcome to the Explore Page!')),
+      appBar: AppBar(title: Text(context.l10n.exploreTitle)),
+      body: Center(child: Text(context.l10n.exploreWelcome)),
     );
   }
 }

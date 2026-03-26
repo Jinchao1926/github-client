@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_github/l10n/l10n.dart';
 
 class InboxPage extends StatelessWidget {
   const InboxPage({super.key});
@@ -6,8 +7,8 @@ class InboxPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Inbox')),
-      body: Center(child: Text('Welcome to the Inbox Page!')),
+      appBar: AppBar(title: Text(context.l10n.inboxTitle)),
+      body: Center(child: Text(context.l10n.inboxWelcome)),
     );
   }
 }

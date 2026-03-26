@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_github/l10n/l10n.dart';
 
 class ProjectsPage extends StatelessWidget {
   const ProjectsPage({super.key});
@@ -6,8 +7,8 @@ class ProjectsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Projects')),
-      body: const Center(child: Text('Projects Page')),
+      appBar: AppBar(title: Text(context.l10n.projectsTitle)),
+      body: Center(child: Text(context.l10n.projectsContent)),
     );
   }
 }

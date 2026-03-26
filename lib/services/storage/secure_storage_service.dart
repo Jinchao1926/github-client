@@ -5,6 +5,7 @@ class SecureStorageService {
     : _storage = storage ?? const FlutterSecureStorage();
 
   static const accessTokenKey = 'github_access_token';
+  static const localeCodeKey = 'app_locale_code';
 
   final FlutterSecureStorage _storage;
 
@@ -18,5 +19,17 @@ class SecureStorageService {
 
   Future<void> deleteAccessToken() {
     return _storage.delete(key: accessTokenKey);
+  }
+
+  Future<void> writeLocaleCode(String localeCode) {
+    return _storage.write(key: localeCodeKey, value: localeCode);
+  }
+
+  Future<String?> readLocaleCode() {
+    return _storage.read(key: localeCodeKey);
+  }
+
+  Future<void> deleteLocaleCode() {
+    return _storage.delete(key: localeCodeKey);
   }
 }

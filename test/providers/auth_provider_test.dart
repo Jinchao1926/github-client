@@ -29,6 +29,7 @@ class FakeSecureStorageService extends SecureStorageService {
 
   String? initialToken;
   String? storedToken;
+  String? storedLocaleCode;
 
   @override
   Future<void> writeAccessToken(String token) async {
@@ -44,6 +45,21 @@ class FakeSecureStorageService extends SecureStorageService {
   Future<void> deleteAccessToken() async {
     storedToken = null;
     initialToken = null;
+  }
+
+  @override
+  Future<void> writeLocaleCode(String localeCode) async {
+    storedLocaleCode = localeCode;
+  }
+
+  @override
+  Future<String?> readLocaleCode() async {
+    return storedLocaleCode;
+  }
+
+  @override
+  Future<void> deleteLocaleCode() async {
+    storedLocaleCode = null;
   }
 }
 
@@ -82,7 +98,10 @@ void main() {
   test('signIn stores token and user on success', () async {
     final storage = FakeSecureStorageService();
     final provider = AuthProvider(
-      authService: FakeGitHubOAuthService(tokenToReturn: 'token', userToReturn: user),
+      authService: FakeGitHubOAuthService(
+        tokenToReturn: 'token',
+        userToReturn: user,
+      ),
       storageService: storage,
     );
 
@@ -96,7 +115,10 @@ void main() {
   test('signOut clears user and token', () async {
     final storage = FakeSecureStorageService();
     final provider = AuthProvider(
-      authService: FakeGitHubOAuthService(tokenToReturn: 'token', userToReturn: user),
+      authService: FakeGitHubOAuthService(
+        tokenToReturn: 'token',
+        userToReturn: user,
+      ),
       storageService: storage,
     );
 
