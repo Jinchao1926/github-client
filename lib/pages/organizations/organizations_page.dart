@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_github/l10n/l10n.dart';
 import 'package:flutter_github/widgets/common/inset_grouped_section.dart';
 
 class OrganizationsPage extends StatelessWidget {
@@ -6,22 +7,24 @@ class OrganizationsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Organizations')),
+      appBar: AppBar(title: Text(l10n.organizationsTitle)),
       body: ListView(
         children: [
           InsetGroupedSection(
             children: [
               ListTile(
-                leading: CircleAvatar(child: Text('A')),
-                title: Text('Organization A'),
-                subtitle: Text('Description of Organization A'),
+                leading: const CircleAvatar(child: Text('A')),
+                title: Text(l10n.organizationAName),
+                subtitle: Text(l10n.organizationADescription),
                 onTap: () {},
               ),
               ListTile(
-                leading: CircleAvatar(child: Text('B')),
-                title: Text('Organization B'),
-                subtitle: Text('Description of Organization B'),
+                leading: const CircleAvatar(child: Text('B')),
+                title: Text(l10n.organizationBName),
+                subtitle: Text(l10n.organizationBDescription),
                 onTap: () {},
               ),
             ],

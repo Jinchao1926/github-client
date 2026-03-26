@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_github/models/github_user.dart';
+import 'package:flutter_github/l10n/l10n.dart';
 
 class UserProfile extends StatelessWidget {
   final GitHubUser user;
@@ -31,7 +32,7 @@ class UserProfile extends StatelessWidget {
           Text(user.bio!, textAlign: TextAlign.center),
         ],
         const SizedBox(height: 16),
-        OutlinedButton(onPressed: onSignOut, child: const Text('Sign out')),
+        OutlinedButton(onPressed: onSignOut, child: Text(context.l10n.signOut)),
       ],
     );
   }

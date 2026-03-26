@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_github/l10n/l10n.dart';
 import 'package:flutter_github/pages/explore/explore_page.dart';
 import 'package:flutter_github/pages/discussions/discussions_page.dart';
 import 'package:flutter_github/pages/home/home_page.dart';
@@ -64,8 +65,8 @@ class AppRoutes {
 
     return MaterialPageRoute(
       builder: (context) => Scaffold(
-        appBar: AppBar(title: const Text('页面不存在')),
-        body: const Center(child: Text('404 - 页面未找到')),
+        appBar: AppBar(title: Text(context.l10n.pageNotFoundTitle)),
+        body: Center(child: Text(context.l10n.pageNotFoundMessage)),
       ),
     );
   }

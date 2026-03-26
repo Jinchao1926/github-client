@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_github/l10n/l10n.dart';
 import 'package:flutter_github/pages/routes/index.dart';
 import 'package:flutter_github/pages/home/widgets/favorites_cell.dart';
 import 'package:flutter_github/widgets/common/inset_grouped_section.dart';
@@ -20,34 +21,36 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Home')),
+      appBar: AppBar(title: Text(l10n.homeTitle)),
       body: ListView(
         children: [
-          _buildSearchBar(),
+          _buildSearchBar(context),
           InsetGroupedSection(
-            title: 'My Work',
+            title: l10n.myWorkSection,
             children: _buildMyWorkCells(context),
           ),
           InsetGroupedSection(
-            title: 'Favorites',
+            title: l10n.favoritesSection,
             children: [
-              FavoritesCell(title: 'Favorite Repo', onTap: () {}),
-              FavoritesCell(title: 'Favorite Org', onTap: () {}),
+              FavoritesCell(title: l10n.favoriteRepo, onTap: () {}),
+              FavoritesCell(title: l10n.favoriteOrg, onTap: () {}),
             ],
           ),
           InsetGroupedSection(
-            title: 'Shortcuts',
+            title: l10n.shortcutsSection,
             children: [
-              ShortcutCell(title: 'Create Issue', onTap: () {}),
-              ShortcutCell(title: 'New PR', onTap: () {}),
+              ShortcutCell(title: l10n.createIssue, onTap: () {}),
+              ShortcutCell(title: l10n.newPr, onTap: () {}),
             ],
           ),
           InsetGroupedSection(
-            title: 'Recent',
+            title: l10n.recentSection,
             children: [
-              RecentCell(title: 'Recently opened repo', onTap: () {}),
-              RecentCell(title: 'Recent discussion', onTap: () {}),
+              RecentCell(title: l10n.recentlyOpenedRepo, onTap: () {}),
+              RecentCell(title: l10n.recentDiscussion, onTap: () {}),
             ],
           ),
         ],
@@ -55,37 +58,41 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget _buildSearchBar() {
+  Widget _buildSearchBar(BuildContext context) {
     return Padding(
       padding: const EdgeInsetsGeometry.symmetric(horizontal: 24),
-      child: CupertinoSearchTextField(placeholder: 'Search Github'),
+      child: CupertinoSearchTextField(
+        placeholder: context.l10n.homeSearchPlaceholder,
+      ),
     );
   }
 
   List<Widget> _buildMyWorkCells(BuildContext context) {
+    final l10n = context.l10n;
+
     final actions = <_HomeAction>[
       _HomeAction(
-        title: 'Issues',
+        title: l10n.issuesTitle,
         icon: Icons.error_outline,
         onTap: () => AppRoutes.pushNamed(context, RoutePaths.issues),
       ),
       _HomeAction(
-        title: 'Pull Requests',
+        title: l10n.pullRequestsTitle,
         icon: Icons.merge_type,
         onTap: () => AppRoutes.pushNamed(context, RoutePaths.pullRequests),
       ),
       _HomeAction(
-        title: 'Discussions',
+        title: l10n.discussionsTitle,
         icon: Icons.forum_outlined,
         onTap: () => AppRoutes.pushNamed(context, RoutePaths.discussions),
       ),
       _HomeAction(
-        title: 'Projects',
+        title: l10n.projectsTitle,
         icon: Icons.folder_open,
         onTap: () => AppRoutes.pushNamed(context, RoutePaths.projects),
       ),
       _HomeAction(
-        title: 'Top Repositories',
+        title: l10n.topRepositoriesTitle,
         icon: Icons.star_border,
         onTap: () => AppRoutes.pushNamed(
           context,
@@ -94,12 +101,12 @@ class HomePage extends StatelessWidget {
         ),
       ),
       _HomeAction(
-        title: 'Organizations',
+        title: l10n.organizationsTitle,
         icon: Icons.business,
         onTap: () => AppRoutes.pushNamed(context, RoutePaths.organizations),
       ),
       _HomeAction(
-        title: 'Starred',
+        title: l10n.starredRepositoriesTitle,
         icon: Icons.star,
         onTap: () => AppRoutes.pushNamed(
           context,

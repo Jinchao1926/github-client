@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_github/l10n/l10n.dart';
 import 'package:flutter_github/themes/index.dart';
 
 class LoginIn extends StatelessWidget {
@@ -9,6 +10,8 @@ class LoginIn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -19,23 +22,17 @@ class LoginIn extends StatelessWidget {
         ),
         const SizedBox(height: 16),
 
-        const Text(
-          'Connect your GitHub account',
+        Text(
+          l10n.connectGithubAccount,
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 8),
 
-        const Text(
-          'Sign in to see your GitHub profile information here.',
-          textAlign: TextAlign.center,
-        ),
+        Text(l10n.profileSigninDescription, textAlign: TextAlign.center),
         const SizedBox(height: 16),
 
-        ElevatedButton(
-          onPressed: onSignIn,
-          child: const Text('Sign in with GitHub'),
-        ),
+        ElevatedButton(onPressed: onSignIn, child: Text(l10n.signinWithGithub)),
 
         if (errorMessage != null) ...[
           const SizedBox(height: 12),

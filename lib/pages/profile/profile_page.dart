@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_github/l10n/l10n.dart';
 import 'package:flutter_github/pages/routes/index.dart';
 import 'package:flutter_github/providers/auth_provider.dart';
 import 'package:flutter_github/themes/index.dart';
@@ -18,7 +19,7 @@ class ProfilePage extends StatelessWidget {
 
         return Scaffold(
           appBar: AppBar(
-            title: const Text('Profile'),
+            title: Text(context.l10n.profileTitle),
             actions: [
               IconButton(
                 icon: Icon(
