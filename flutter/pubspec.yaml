@@ -105,9 +105,18 @@ flutter:
 
 # dart pub global activate rps
 scripts:
+  hooks:install: dart run tool/install_git_hooks.dart
+  # Check localization files.
+  l10n:check: dart run tool/run_pre_commit.dart
+  # Fix localization files.
+  l10n:fix: dart run tool/run_pre_commit.dart --fix
+  # Sort localization files.
+  l10n:sort: dart run tool/sort_arb.dart
+  # Generate localization files.
+  l10n:gen: flutter gen-l10n
   # Generate templated models using mason.
-  get: mason get
-  make: mason make json_model
+  mason:get: mason get
+  mason:make: mason make json_model
   # Generates code for JSON serialization using json_serializable.
   build: dart run build_runner build --delete-conflicting-outputs
   watch: dart run build_runner watch --delete-conflicting-outputs

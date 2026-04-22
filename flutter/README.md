@@ -96,6 +96,29 @@ mason make json_model
 rps build
 ```
 
+### 3.5 Git Hooks
+
+This repo provides a repo-managed pre-commit hook under `.githooks/pre-commit`.
+
+Install it once per clone:
+
+```sh
+rps hooks:install
+```
+
+What it does:
+
+- checks whether ARB files are already sorted before commit
+
+If any ARB file is unsorted, or if duplicate top-level ARB keys are present,
+the commit is blocked and you should run `rps l10n:sort`.
+
+You can also auto-fix ARB order manually with:
+
+```sh
+dart run tool/run_pre_commit.dart --fix
+```
+
 ## 4. Environment Configuration
 
 The app loads the root `.env` file on startup.
