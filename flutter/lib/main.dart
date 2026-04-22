@@ -14,8 +14,12 @@ import 'package:github_client/providers/locale_provider.dart';
 import 'package:github_client/themes/index.dart';
 import 'package:provider/provider.dart';
 
-void main() {
-  dotenv.load();
+Future<void> loadEnvironment() async {
+  await dotenv.load();
+}
+
+Future<void> main() async {
+  await loadEnvironment();
 
   runApp(
     MultiProvider(

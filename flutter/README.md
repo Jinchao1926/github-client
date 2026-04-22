@@ -1,8 +1,8 @@
-# github_client
+# GitHub Client
 
-A Flutter github client project.
+A Flutter GitHub client project.
 
-## Libraries
+## Tech Stack
 
 - `provider`: state management
 - `dio`: HTTP networking
@@ -12,7 +12,28 @@ A Flutter github client project.
 - `json_annotation` / `json_serializable` / `build_runner`: JSON serialization code generation
 - `flutter_localizations`: localization support
 
-## `.env` Configuration
+## Getting Started
+
+Install dependencies:
+
+```sh
+flutter pub get
+```
+
+Run on the current selected device:
+
+```sh
+flutter run
+```
+
+Run on a specific device:
+
+```sh
+flutter devices
+flutter run -d <device-id>
+```
+
+## Environment Configuration
 
 The app loads the root `.env` file on startup.
 
@@ -42,4 +63,53 @@ Example:
 
 ```text
 jinchaohub://oauth-callback
+```
+
+Make sure the callback scheme also matches the iOS URL scheme configured in
+`ios/Runner/Info.plist`.
+
+## iOS Simulator Startup
+
+If macOS runs successfully but the iOS Simulator stays at `Launching...`, the
+Flutter SDK may be missing the current iOS engine artifacts.
+
+Flutter has three relevant layers:
+
+- Flutter framework: the Dart APIs used by app code.
+- Flutter tool: commands such as `flutter run` and `flutter build`.
+- Flutter engine: the native runtime used for rendering, Dart execution,
+  platform channels, and platform embedding.
+
+Each Flutter SDK version points to a specific engine revision. The SDK stores
+downloaded platform artifacts under its local cache. If the iOS cache still
+contains artifacts for an older engine revision, `flutter run` needs to download
+the matching iOS artifacts before it can build and launch the simulator app.
+When that download is slow, blocked, or interrupted, startup can appear stuck at
+`Launching...`.
+
+Pre-download the required iOS artifacts with:
+
+```sh
+flutter precache --ios
+```
+
+To pre-download artifacts for all enabled platforms, run:
+
+```sh
+flutter precache
+```
+
+Useful cache locations:
+
+- `<flutter-sdk>/bin/cache/engine.stamp`: the engine revision expected by the
+  current Flutter SDK.
+- `<flutter-sdk>/bin/cache/ios-sdk.stamp`: the iOS artifact revision currently
+  cached locally.
+- `<flutter-sdk>/bin/cache/artifacts/engine/ios`: cached iOS engine artifacts.
+- `<flutter-sdk>/bin/cache/downloads`: downloaded artifact archives.
+
+After refreshing the cache, run the simulator again:
+
+```sh
+flutter run -d <ios-simulator-id>
 ```
