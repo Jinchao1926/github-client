@@ -128,7 +128,6 @@ class GitHubOAuthService {
   }
 
   Future<GitHubUser> fetchCurrentUser() async {
-    final user = await _userService.getCurrentUser();
-    return GitHubUser.fromJson(user);
+    return await _userService.getCurrentUser();
   }
 }

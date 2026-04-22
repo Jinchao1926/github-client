@@ -1,12 +1,12 @@
+import 'package:github_client/models/github_user.dart';
 import 'package:github_client/services/api/api_client.dart';
 
 class UserService {
-  UserService({ApiClient? apiClient})
-    : _apiClient = apiClient ?? ApiClient();
+  UserService({ApiClient? apiClient}) : _apiClient = apiClient ?? ApiClient();
 
   final ApiClient _apiClient;
 
-  Future<Map<String, dynamic>> getCurrentUser() async {
+  Future<GitHubUser> getCurrentUser() async {
     final response = await _apiClient.dio.get<Map<String, dynamic>>('/user');
     final body = response.data;
 
@@ -14,6 +14,6 @@ class UserService {
       throw Exception('Failed to load GitHub user');
     }
 
-    return body;
+    return GitHubUser.fromJson(body);
   }
 }
