@@ -52,7 +52,7 @@ class GitHubOAuthService {
           queryParameters: {
             'client_id': GitHubAuthConfig.clientId,
             'redirect_uri': GitHubAuthConfig.redirectUri,
-            'scope': GitHubAuthConfig.scopes.join(' '),
+            // 'scope': GitHubAuthConfig.scopes.join(' '),
             'state': state,
             'response_type': 'code',
             'code_challenge': createCodeChallenge(codeVerifier),
