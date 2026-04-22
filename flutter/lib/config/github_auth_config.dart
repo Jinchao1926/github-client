@@ -27,7 +27,7 @@ class GitHubAuthConfig {
       'https://github.com/login/oauth/authorize';
   static const tokenEndpoint = 'https://github.com/login/oauth/access_token';
   static const userEndpoint = 'https://api.github.com/user';
-  static const scopes = <String>['read:user', 'user:email'];
+  // static const scopes = <String>['user', 'repo'];
 
   static String get redirectUri => '$callbackScheme://$callbackHost';
 }
