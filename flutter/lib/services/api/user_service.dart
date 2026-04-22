@@ -1,7 +1,7 @@
 import 'package:github_client/services/api/api_client.dart';
 
-class GitHubApiService {
-  GitHubApiService({ApiClient? apiClient})
+class UserService {
+  UserService({ApiClient? apiClient})
     : _apiClient = apiClient ?? ApiClient();
 
   final ApiClient _apiClient;

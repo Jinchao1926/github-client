@@ -9,17 +9,17 @@ import 'package:flutter_web_auth_2/flutter_web_auth_2.dart';
 import 'package:github_client/config/github_auth_config.dart';
 import 'package:github_client/models/github_user.dart';
 import 'package:github_client/services/api/api_client.dart';
-import 'package:github_client/services/api/github_api_service.dart';
+import 'package:github_client/services/api/user_service.dart';
 
 class GitHubOAuthService {
   GitHubOAuthService({ApiClient? apiClient}) : this._(apiClient ?? ApiClient());
 
   GitHubOAuthService._(ApiClient apiClient)
     : _apiClient = apiClient,
-      _gitHubApiService = GitHubApiService(apiClient: apiClient);
+      _userService = UserService(apiClient: apiClient);
 
   final ApiClient _apiClient;
-  final GitHubApiService _gitHubApiService;
+  final UserService _userService;
 
   static final Random _random = Random.secure();
   static const String _charset =
@@ -128,7 +128,7 @@ class GitHubOAuthService {
   }
 
   Future<GitHubUser> fetchCurrentUser() async {
-    final user = await _gitHubApiService.getCurrentUser();
+    final user = await _userService.getCurrentUser();
     return GitHubUser.fromJson(user);
   }
 }
