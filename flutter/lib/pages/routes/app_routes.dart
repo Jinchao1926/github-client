@@ -16,10 +16,12 @@ import 'route_paths.dart';
 
 class AppRoutes {
   static Map<String, WidgetBuilder> get routes => {
+    // main tabs
     RoutePaths.home: (context) => const HomePage(),
     RoutePaths.inbox: (context) => const InboxPage(),
     RoutePaths.explore: (context) => const ExplorePage(),
     RoutePaths.profile: (context) => const ProfilePage(),
+    // detail pages
     RoutePaths.issues: (context) => const IssuesPage(),
     RoutePaths.pullRequests: (context) => const PullRequestsPage(),
     RoutePaths.discussions: (context) => const DiscussionsPage(),
