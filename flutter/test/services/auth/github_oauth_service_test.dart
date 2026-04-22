@@ -110,7 +110,7 @@ void main() {
 
       final response = await githubApiService.getCurrentUser();
 
-      expect(response['login'], 'octocat');
+      expect(response.login, 'octocat');
     },
   );
 

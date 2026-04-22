@@ -9,14 +9,17 @@ class AuthProvider extends ChangeNotifier {
   AuthProvider({
     GitHubOAuthService? authService,
     SecureStorageService? storageService,
-  }) : _storageService = storageService ?? SecureStorageService(),
-       _authService =
-           authService ??
-           GitHubOAuthService(
-             apiClient: ApiClient(
-               tokenProvider: (storageService ?? SecureStorageService()).readAccessToken,
-             ),
-           );
+  }) : this._(storageService ?? SecureStorageService(), authService);
+
+  AuthProvider._(
+    SecureStorageService storageService,
+    GitHubOAuthService? authService,
+  ) : _storageService = storageService,
+      _authService =
+          authService ??
+          GitHubOAuthService(
+            apiClient: ApiClient(storageService: storageService),
+          );
 
   final GitHubOAuthService _authService;
   final SecureStorageService _storageService;
