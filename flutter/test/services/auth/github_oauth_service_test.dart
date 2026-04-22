@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:github_client/services/api/api_client.dart';
-import 'package:github_client/services/api/github_api_service.dart';
+import 'package:github_client/services/api/user_service.dart';
 import 'package:github_client/services/auth/github_oauth_service.dart';
 
 void main() {
@@ -34,7 +34,9 @@ void main() {
     final apiClient = ApiClient();
 
     expect(
-      apiClient.dio.interceptors.any((interceptor) => interceptor is LogInterceptor),
+      apiClient.dio.interceptors.any(
+        (interceptor) => interceptor is LogInterceptor,
+      ),
       isTrue,
     );
   });
@@ -49,62 +51,68 @@ void main() {
     );
   });
 
-  test('ApiClient injects bearer token when token provider returns one', () async {
-    final apiClient = ApiClient(tokenProvider: () async => 'token-123');
-    String? authorizationHeader;
+  test(
+    'ApiClient injects bearer token when token provider returns one',
+    () async {
+      final apiClient = ApiClient(tokenProvider: () async => 'token-123');
+      String? authorizationHeader;
 
-    apiClient.dio.interceptors.add(
-      InterceptorsWrapper(
-        onRequest: (options, handler) {
-          authorizationHeader = options.headers['Authorization'] as String?;
-          handler.resolve(
-            Response(
-              requestOptions: options,
-              statusCode: 200,
-              data: {'ok': true},
-            ),
-          );
-        },
-      ),
-    );
-
-    await apiClient.dio.get('/user');
-
-    expect(authorizationHeader, 'Bearer token-123');
-  });
-
-  test('GitHubApiService fetches current user through shared ApiClient', () async {
-    final dio = Dio(BaseOptions(baseUrl: 'https://api.github.com'))
-      ..interceptors.add(
+      apiClient.dio.interceptors.add(
         InterceptorsWrapper(
           onRequest: (options, handler) {
-            if (options.path == '/user') {
-              handler.resolve(
-                Response(
-                  requestOptions: options,
-                  statusCode: 200,
-                  data: {
-                    'login': 'octocat',
-                    'name': 'The Octocat',
-                    'avatar_url': 'https://example.com/avatar.png',
-                    'bio': 'Mascot',
-                  },
-                ),
-              );
-              return;
-            }
-
-            handler.next(options);
+            authorizationHeader = options.headers['Authorization'] as String?;
+            handler.resolve(
+              Response(
+                requestOptions: options,
+                statusCode: 200,
+                data: {'ok': true},
+              ),
+            );
           },
         ),
       );
-    final apiClient = ApiClient(dio: dio);
-    final githubApiService = GitHubApiService(apiClient: apiClient);
 
-    final response = await githubApiService.getCurrentUser();
+      await apiClient.dio.get('/user');
 
-    expect(response['login'], 'octocat');
-  });
+      expect(authorizationHeader, 'Bearer token-123');
+    },
+  );
+
+  test(
+    'GitHubApiService fetches current user through shared ApiClient',
+    () async {
+      final dio = Dio(BaseOptions(baseUrl: 'https://api.github.com'))
+        ..interceptors.add(
+          InterceptorsWrapper(
+            onRequest: (options, handler) {
+              if (options.path == '/user') {
+                handler.resolve(
+                  Response(
+                    requestOptions: options,
+                    statusCode: 200,
+                    data: {
+                      'login': 'octocat',
+                      'name': 'The Octocat',
+                      'avatar_url': 'https://example.com/avatar.png',
+                      'bio': 'Mascot',
+                    },
+                  ),
+                );
+                return;
+              }
+
+              handler.next(options);
+            },
+          ),
+        );
+      final apiClient = ApiClient(dio: dio);
+      final githubApiService = UserService(apiClient: apiClient);
+
+      final response = await githubApiService.getCurrentUser();
+
+      expect(response['login'], 'octocat');
+    },
+  );
 
   test('GitHubOAuthService fetchCurrentUser uses ApiClient Dio', () async {
     final dio = Dio(BaseOptions(baseUrl: 'https://api.github.com'))

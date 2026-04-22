@@ -2,7 +2,7 @@
 
 A Flutter GitHub client project.
 
-## Tech Stack
+## 1. Tech Stack
 
 - `provider`: state management
 - `dio`: HTTP networking
@@ -12,7 +12,7 @@ A Flutter GitHub client project.
 - `json_annotation` / `json_serializable` / `build_runner`: JSON serialization code generation
 - `flutter_localizations`: localization support
 
-## Getting Started
+## 2. Getting Started
 
 Install dependencies:
 
@@ -33,7 +33,70 @@ flutter devices
 flutter run -d <device-id>
 ```
 
-## Environment Configuration
+## 3. Code Generation
+
+This project uses:
+
+- `mason`: generate model scaffolds
+- `rps`: run `build_runner`
+
+### 3.1 Install Tools
+
+```sh
+dart pub global activate mason_cli
+dart pub global activate rps
+```
+
+If needed, add Dart global bin to `PATH`:
+
+```sh
+export PATH="$PATH:$HOME/.pub-cache/bin"
+```
+
+### 3.2 Sync Local Brick
+
+This repo provides a local brick named `json_model`.
+
+```sh
+mason get
+```
+
+### 3.3 Create a Model
+
+```sh
+mason make json_model
+```
+
+Example values:
+
+- `class_name`: `GithubOrganization`
+- `file_name`: `github_organization`
+
+Generated file:
+
+- `lib/models/github_organization.dart`
+
+### 3.4 Generate `.g.dart`
+
+```sh
+rps build
+```
+
+Or watch continuously:
+
+```sh
+rps watch
+```
+
+Typical workflow:
+
+```sh
+mason get
+mason make json_model
+rps build
+```
+
+## 4. Environment Configuration
 
 The app loads the root `.env` file on startup.
 
@@ -68,7 +131,7 @@ jinchaohub://oauth-callback
 Make sure the callback scheme also matches the iOS URL scheme configured in
 `ios/Runner/Info.plist`.
 
-## iOS Simulator Startup
+## 5. iOS Simulator Startup
 
 If macOS runs successfully but the iOS Simulator stays at `Launching...`, the
 Flutter SDK may be missing the current iOS engine artifacts.

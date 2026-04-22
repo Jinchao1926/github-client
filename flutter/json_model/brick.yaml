@@ -1,0 +1,16 @@
+name: json_model
+description: Generate a json_serializable model under lib/models.
+version: 0.1.0+1
+
+environment:
+  mason: ^0.1.2
+
+vars:
+  class_name:
+    type: string
+    description: Model class name
+    prompt: What is the model class name?
+  file_name:
+    type: string
+    description: Model file name in snake_case
+    prompt: What is the model file name?

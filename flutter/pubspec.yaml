@@ -102,3 +102,12 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+# dart pub global activate rps
+scripts:
+  # Generate templated models using mason.
+  get: mason get
+  make: mason make json_model
+  # Generates code for JSON serialization using json_serializable.
+  build: dart run build_runner build --delete-conflicting-outputs
+  watch: dart run build_runner watch --delete-conflicting-outputs
