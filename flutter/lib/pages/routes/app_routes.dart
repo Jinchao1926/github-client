@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:github_client/l10n/l10n.dart';
+import 'package:github_client/pages/auth/login_page.dart';
 import 'package:github_client/pages/explore/explore_page.dart';
 import 'package:github_client/pages/discussions/discussions_page.dart';
 import 'package:github_client/pages/home/home_page.dart';
@@ -12,9 +13,22 @@ import 'package:github_client/pages/inbox/inbox_page.dart';
 import 'package:github_client/pages/profile/profile_page.dart';
 import 'package:github_client/pages/settings/appearance_page.dart';
 import 'package:github_client/pages/settings/settings_page.dart';
+import 'package:github_client/providers/auth_provider.dart';
+import 'package:provider/provider.dart';
 import 'route_paths.dart';
 
 class AppRoutes {
+  static const Set<String> protectedRoutes = {
+    RoutePaths.issues,
+    RoutePaths.pullRequests,
+    RoutePaths.discussions,
+    RoutePaths.projects,
+    RoutePaths.repositories,
+    RoutePaths.organizations,
+    RoutePaths.settings,
+    RoutePaths.appearance,
+  };
+
   static Map<String, WidgetBuilder> get routes => {
     // main tabs
     RoutePaths.home: (context) => const HomePage(),
@@ -62,6 +76,23 @@ class AppRoutes {
     final WidgetBuilder? builder = routes[path];
 
     if (builder != null) {
+      if (protectedRoutes.contains(path)) {
+        return MaterialPageRoute(
+          builder: (context) {
+            final isAuthenticated = context
+                .read<AuthProvider>()
+                .isAuthenticated;
+
+            if (!isAuthenticated) {
+              return const LoginPage();
+            }
+
+            return builder(context);
+          },
+          settings: settings,
+        );
+      }
+
       return MaterialPageRoute(builder: builder, settings: settings);
     }
 
