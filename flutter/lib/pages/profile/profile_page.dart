@@ -4,8 +4,6 @@ import 'package:github_client/pages/routes/index.dart';
 import 'package:github_client/providers/auth_provider.dart';
 import 'package:github_client/themes/index.dart';
 import 'package:provider/provider.dart';
-import 'widgets/login_in.dart';
-import 'widgets/logging_in.dart';
 import 'widgets/user_profile.dart';
 
 class ProfilePage extends StatelessWidget {
@@ -42,13 +40,8 @@ class ProfilePage extends StatelessWidget {
           body: Center(
             child: Padding(
               padding: const EdgeInsets.all(24),
-              child: provider.isInitializing || provider.isSigningIn
-                  ? LoggingIn()
-                  : user == null
-                  ? LoginIn(
-                      onSignIn: provider.signIn,
-                      errorMessage: provider.errorMessage,
-                    )
+              child: user == null
+                  ? null
                   : UserProfile(user: user, onSignOut: provider.signOut),
             ),
           ),
