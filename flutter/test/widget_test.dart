@@ -28,7 +28,9 @@ class FakeSecureStorageService extends SecureStorageService {
 }
 
 void main() {
-  testWidgets('app boots to home page', (WidgetTester tester) async {
+  testWidgets('app boots to login page when signed out', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(
       MultiProvider(
         providers: [
@@ -40,8 +42,8 @@ void main() {
       ),
     );
 
-    expect(find.text('Home'), findsWidgets);
-    expect(find.text('Search GitHub'), findsOneWidget);
+    expect(find.text('Sign in with GitHub'), findsOneWidget);
+    expect(find.text('Home'), findsNothing);
   });
 
   testWidgets('app renders chinese locale when selected', (
@@ -63,7 +65,7 @@ void main() {
       ),
     );
 
-    expect(find.text('首页'), findsWidgets);
-    expect(find.text('搜索 GitHub'), findsOneWidget);
+    expect(find.text('使用 GitHub 登录'), findsOneWidget);
+    expect(find.text('首页'), findsNothing);
   });
 }

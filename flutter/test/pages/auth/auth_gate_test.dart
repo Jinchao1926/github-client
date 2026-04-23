@@ -1,10 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 
 import 'package:github_client/l10n/app_localizations.dart';
 import 'package:github_client/models/github_user.dart';
-import 'package:github_client/pages/profile/profile_page.dart';
+import 'package:github_client/pages/auth/auth_gate.dart';
 import 'package:github_client/providers/auth_provider.dart';
 import 'package:github_client/providers/locale_provider.dart';
 import 'package:github_client/services/auth/github_oauth_service.dart';
@@ -66,6 +68,21 @@ class FakeSecureStorageService extends SecureStorageService {
   }
 }
 
+class PendingSecureStorageService extends FakeSecureStorageService {
+  final Completer<String?> _readAccessTokenCompleter = Completer<String?>();
+
+  @override
+  Future<String?> readAccessToken() {
+    return _readAccessTokenCompleter.future;
+  }
+
+  void completeRead(String? token) {
+    if (!_readAccessTokenCompleter.isCompleted) {
+      _readAccessTokenCompleter.complete(token);
+    }
+  }
+}
+
 Widget buildTestApp(AuthProvider provider) {
   return MultiProvider(
     providers: [
@@ -76,7 +93,7 @@ Widget buildTestApp(AuthProvider provider) {
     child: MaterialApp(
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: LocaleProvider.supportedLocales,
-      home: const ProfilePage(),
+      home: const AuthGate(),
     ),
   );
 }
@@ -89,7 +106,21 @@ void main() {
     bio: 'Mascot',
   );
 
-  testWidgets('ProfilePage shows user info when signed in', (
+  testWidgets('AuthGate shows login page when signed out', (
+    WidgetTester tester,
+  ) async {
+    final provider = AuthProvider(
+      authService: FakeGitHubOAuthService(userToReturn: user),
+      storageService: FakeSecureStorageService(),
+    );
+
+    await tester.pumpWidget(buildTestApp(provider));
+
+    expect(find.text('Sign in with GitHub'), findsOneWidget);
+    expect(find.text('Home'), findsNothing);
+  });
+
+  testWidgets('AuthGate shows tabs when signed in', (
     WidgetTester tester,
   ) async {
     final provider = AuthProvider(
@@ -103,9 +134,25 @@ void main() {
     await provider.signIn();
     await tester.pumpWidget(buildTestApp(provider));
 
-    expect(find.text('octocat'), findsOneWidget);
-    expect(find.text('The Octocat'), findsOneWidget);
-    expect(find.text('Sign out'), findsOneWidget);
+    expect(find.text('Home'), findsWidgets);
     expect(find.text('Sign in with GitHub'), findsNothing);
+  });
+
+  testWidgets('AuthGate shows loading state while initializing', (
+    WidgetTester tester,
+  ) async {
+    final storage = PendingSecureStorageService();
+    final provider = AuthProvider(
+      authService: FakeGitHubOAuthService(userToReturn: user),
+      storageService: storage,
+    );
+
+    unawaited(provider.initialize());
+    await tester.pumpWidget(buildTestApp(provider));
+
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    expect(find.text('Signing in...'), findsOneWidget);
+
+    storage.completeRead(null);
   });
 }
