@@ -5,16 +5,25 @@ import 'package:github_client/services/api/api_client.dart';
 import 'package:github_client/services/auth/github_oauth_service.dart';
 import 'package:github_client/services/storage/secure_storage_service.dart';
 
+typedef ClearApiCache = Future<void> Function();
+
 class AuthProvider extends ChangeNotifier {
   AuthProvider({
     GitHubOAuthService? authService,
     SecureStorageService? storageService,
-  }) : this._(storageService ?? SecureStorageService(), authService);
+    ClearApiCache? clearApiCache,
+  }) : this._(
+         storageService ?? SecureStorageService(),
+         authService,
+         clearApiCache ?? ApiClient.clearCache,
+       );
 
   AuthProvider._(
     SecureStorageService storageService,
     GitHubOAuthService? authService,
+    ClearApiCache clearApiCache,
   ) : _storageService = storageService,
+      _clearApiCache = clearApiCache,
       _authService =
           authService ??
           GitHubOAuthService(
@@ -23,6 +32,7 @@ class AuthProvider extends ChangeNotifier {
 
   final GitHubOAuthService _authService;
   final SecureStorageService _storageService;
+  final ClearApiCache _clearApiCache;
 
   bool _isInitializing = false;
   bool _isSigningIn = false;
@@ -77,6 +87,7 @@ class AuthProvider extends ChangeNotifier {
 
   Future<void> signOut() async {
     await _storageService.deleteAccessToken();
+    await _clearApiCache();
     _user = null;
     _errorMessage = null;
     notifyListeners();

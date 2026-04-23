@@ -114,12 +114,16 @@ void main() {
 
   test('signOut clears user and token', () async {
     final storage = FakeSecureStorageService();
+    var didClearApiCache = false;
     final provider = AuthProvider(
       authService: FakeGitHubOAuthService(
         tokenToReturn: 'token',
         userToReturn: user,
       ),
       storageService: storage,
+      clearApiCache: () async {
+        didClearApiCache = true;
+      },
     );
 
     await provider.signIn();
@@ -128,5 +132,6 @@ void main() {
     expect(provider.isAuthenticated, isFalse);
     expect(provider.user, isNull);
     expect(storage.storedToken, isNull);
+    expect(didClearApiCache, isTrue);
   });
 }
