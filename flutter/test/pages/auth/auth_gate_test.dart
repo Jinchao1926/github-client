@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 
 import 'package:github_client/l10n/app_localizations.dart';
+import 'package:github_client/models/github_auth_session.dart';
 import 'package:github_client/models/github_user.dart';
 import 'package:github_client/pages/auth/auth_gate.dart';
 import 'package:github_client/providers/auth_provider.dart';
@@ -14,16 +15,16 @@ import 'package:github_client/services/storage/secure_storage_service.dart';
 import 'package:github_client/themes/index.dart';
 
 class FakeGitHubOAuthService extends GitHubOAuthService {
-  FakeGitHubOAuthService({this.tokenToReturn, this.userToReturn, this.error});
+  FakeGitHubOAuthService({this.sessionToReturn, this.userToReturn, this.error});
 
-  final String? tokenToReturn;
+  final GitHubAuthSession? sessionToReturn;
   final GitHubUser? userToReturn;
   final Object? error;
 
   @override
-  Future<String> signIn() async {
+  Future<GitHubAuthSession> signIn() async {
     if (error != null) throw error!;
-    return tokenToReturn!;
+    return sessionToReturn!;
   }
 
   @override
@@ -34,22 +35,22 @@ class FakeGitHubOAuthService extends GitHubOAuthService {
 }
 
 class FakeSecureStorageService extends SecureStorageService {
-  String? storedToken;
+  GitHubAuthSession? storedSession;
   String? storedLocaleCode;
 
   @override
-  Future<void> writeAccessToken(String token) async {
-    storedToken = token;
+  Future<void> writeAuthSession(GitHubAuthSession session) async {
+    storedSession = session;
   }
 
   @override
-  Future<String?> readAccessToken() async {
-    return storedToken;
+  Future<GitHubAuthSession?> readAuthSession() async {
+    return storedSession;
   }
 
   @override
-  Future<void> deleteAccessToken() async {
-    storedToken = null;
+  Future<void> deleteAuthSession() async {
+    storedSession = null;
   }
 
   @override
@@ -69,16 +70,17 @@ class FakeSecureStorageService extends SecureStorageService {
 }
 
 class PendingSecureStorageService extends FakeSecureStorageService {
-  final Completer<String?> _readAccessTokenCompleter = Completer<String?>();
+  final Completer<GitHubAuthSession?> _readAuthSessionCompleter =
+      Completer<GitHubAuthSession?>();
 
   @override
-  Future<String?> readAccessToken() {
-    return _readAccessTokenCompleter.future;
+  Future<GitHubAuthSession?> readAuthSession() {
+    return _readAuthSessionCompleter.future;
   }
 
-  void completeRead(String? token) {
-    if (!_readAccessTokenCompleter.isCompleted) {
-      _readAccessTokenCompleter.complete(token);
+  void completeRead(GitHubAuthSession? session) {
+    if (!_readAuthSessionCompleter.isCompleted) {
+      _readAuthSessionCompleter.complete(session);
     }
   }
 }
@@ -99,6 +101,12 @@ Widget buildTestApp(AuthProvider provider) {
 }
 
 void main() {
+  final session = GitHubAuthSession(
+    accessToken: 'token',
+    accessTokenExpiresAt: DateTime.utc(2026, 4, 24, 12),
+    refreshToken: 'refresh-token',
+    refreshTokenExpiresAt: DateTime.utc(2026, 5, 24, 12),
+  );
   const user = GitHubUser(
     login: 'octocat',
     name: 'The Octocat',
@@ -125,7 +133,7 @@ void main() {
   ) async {
     final provider = AuthProvider(
       authService: FakeGitHubOAuthService(
-        tokenToReturn: 'token',
+        sessionToReturn: session,
         userToReturn: user,
       ),
       storageService: FakeSecureStorageService(),

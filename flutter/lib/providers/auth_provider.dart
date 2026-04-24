@@ -1,37 +1,63 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 
 import 'package:github_client/models/github_user.dart';
 import 'package:github_client/services/api/api_client.dart';
+import 'package:github_client/services/auth/auth_session_service.dart';
 import 'package:github_client/services/auth/github_oauth_service.dart';
 import 'package:github_client/services/storage/secure_storage_service.dart';
 
 typedef ClearApiCache = Future<void> Function();
 
 class AuthProvider extends ChangeNotifier {
-  AuthProvider({
+  factory AuthProvider({
     GitHubOAuthService? authService,
     SecureStorageService? storageService,
+    AuthSessionService? authSessionService,
     ClearApiCache? clearApiCache,
-  }) : this._(
-         storageService ?? SecureStorageService(),
-         authService,
-         clearApiCache ?? ApiClient.clearCache,
-       );
+  }) {
+    final resolvedStorageService = storageService ?? SecureStorageService();
+    final refreshAuthService = authService ?? GitHubOAuthService();
+    final resolvedAuthSessionService =
+        authSessionService ??
+        AuthSessionService(
+          storageService: resolvedStorageService,
+          refreshSession: (refreshToken) =>
+              refreshAuthService.refreshSession(refreshToken),
+        );
+    final resolvedAuthService =
+        authService ??
+        GitHubOAuthService(
+          apiClient: ApiClient(
+            storageService: resolvedStorageService,
+            authSessionService: resolvedAuthSessionService,
+          ),
+        );
+
+    return AuthProvider._(
+      resolvedStorageService,
+      resolvedAuthService,
+      resolvedAuthSessionService,
+      clearApiCache ?? ApiClient.clearCache,
+    );
+  }
 
   AuthProvider._(
     SecureStorageService storageService,
-    GitHubOAuthService? authService,
+    GitHubOAuthService authService,
+    AuthSessionService authSessionService,
     ClearApiCache clearApiCache,
   ) : _storageService = storageService,
       _clearApiCache = clearApiCache,
-      _authService =
-          authService ??
-          GitHubOAuthService(
-            apiClient: ApiClient(storageService: storageService),
-          );
+      _authSessionService = authSessionService,
+      _authService = authService {
+    _authSessionService.addInvalidationListener(_handleSessionInvalidated);
+  }
 
   final GitHubOAuthService _authService;
   final SecureStorageService _storageService;
+  final AuthSessionService _authSessionService;
   final ClearApiCache _clearApiCache;
 
   bool _isInitializing = false;
@@ -51,15 +77,15 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final token = await _storageService.readAccessToken();
-      if (token == null || token.isEmpty) {
+      final session = await _storageService.readAuthSession();
+      if (session == null) {
         _user = null;
         return;
       }
 
       _user = await _authService.fetchCurrentUser();
     } catch (_) {
-      await _storageService.deleteAccessToken();
+      await _storageService.deleteAuthSession();
       _user = null;
     } finally {
       _isInitializing = false;
@@ -73,8 +99,8 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final token = await _authService.signIn();
-      await _storageService.writeAccessToken(token);
+      final session = await _authService.signIn();
+      await _storageService.writeAuthSession(session);
       _user = await _authService.fetchCurrentUser();
     } catch (error) {
       _user = null;
@@ -86,10 +112,23 @@ class AuthProvider extends ChangeNotifier {
   }
 
   Future<void> signOut() async {
-    await _storageService.deleteAccessToken();
+    await _authSessionService.clearSession();
     await _clearApiCache();
     _user = null;
     _errorMessage = null;
+    notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    _authSessionService.removeInvalidationListener(_handleSessionInvalidated);
+    super.dispose();
+  }
+
+  void _handleSessionInvalidated() {
+    _user = null;
+    _errorMessage = null;
+    unawaited(_clearApiCache());
     notifyListeners();
   }
 }

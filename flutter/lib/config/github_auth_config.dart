@@ -17,16 +17,20 @@ class GitHubAuthConfig {
   );
   */
 
-  static String get clientId => dotenv.get('GITHUB_CLIENT_ID');
-  static String get clientSecret => dotenv.get('GITHUB_CLIENT_SECRET');
-  static String get callbackScheme =>
-      dotenv.maybeGet('GITHUB_CALLBACK_SCHEME', fallback: 'jinchaohub')!;
-  static String get callbackHost =>
-      dotenv.maybeGet('GITHUB_CALLBACK_HOST', fallback: 'oauth-callback')!;
+  static String get clientId =>
+      dotenv.isInitialized ? (dotenv.maybeGet('GITHUB_CLIENT_ID') ?? '') : '';
+  static String get clientSecret => dotenv.isInitialized
+      ? (dotenv.maybeGet('GITHUB_CLIENT_SECRET') ?? '')
+      : '';
+  static String get callbackScheme => dotenv.isInitialized
+      ? dotenv.maybeGet('GITHUB_CALLBACK_SCHEME', fallback: 'jinchaohub')!
+      : 'jinchaohub';
+  static String get callbackHost => dotenv.isInitialized
+      ? dotenv.maybeGet('GITHUB_CALLBACK_HOST', fallback: 'oauth-callback')!
+      : 'oauth-callback';
   static const authorizationEndpoint =
       'https://github.com/login/oauth/authorize';
   static const tokenEndpoint = 'https://github.com/login/oauth/access_token';
-  static const userEndpoint = 'https://api.github.com/user';
   // static const scopes = <String>['user', 'repo'];
 
   static String get redirectUri => '$callbackScheme://$callbackHost';
