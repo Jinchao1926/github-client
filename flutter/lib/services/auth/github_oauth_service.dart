@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_web_auth_2/flutter_web_auth_2.dart';
 
 import 'package:github_client/config/github_auth_config.dart';
+import 'package:github_client/models/github_auth_session.dart';
 import 'package:github_client/models/github_user.dart';
 import 'package:github_client/services/api/api_client.dart';
 import 'package:github_client/services/api/user_service.dart';
@@ -44,7 +45,7 @@ class GitHubOAuthService {
     return base64UrlEncode(digest.bytes).replaceAll('=', '');
   }
 
-  Future<String> signIn() async {
+  Future<GitHubAuthSession> signIn() async {
     final codeVerifier = createCodeVerifier();
     final state = createState();
     final authorizationUri = Uri.parse(GitHubAuthConfig.authorizationEndpoint)
@@ -117,14 +118,43 @@ class GitHubOAuthService {
     }
 
     final body = response.data;
-    final accessToken = body?['access_token'] as String?;
     debugPrint('Token response: $body');
-
-    if (accessToken == null || accessToken.isEmpty) {
-      throw Exception('Missing access token');
+    if (body == null) {
+      throw Exception('Missing token response body');
     }
 
-    return accessToken;
+    return GitHubAuthSession.fromTokenResponse(body);
+  }
+
+  Future<GitHubAuthSession> refreshSession(String refreshToken) async {
+    final response = await _apiClient.dio.post<Map<String, dynamic>>(
+      GitHubAuthConfig.tokenEndpoint,
+      data: {
+        'client_id': GitHubAuthConfig.clientId,
+        'client_secret': GitHubAuthConfig.clientSecret,
+        'grant_type': 'refresh_token',
+        'refresh_token': refreshToken,
+      },
+      options: Options(
+        headers: {'Accept': 'application/json'},
+        contentType: Headers.formUrlEncodedContentType,
+      ),
+    );
+
+    if (response.statusCode != 200) {
+      throw DioException.badResponse(
+        statusCode: response.statusCode ?? 500,
+        requestOptions: response.requestOptions,
+        response: response,
+      );
+    }
+
+    final body = response.data;
+    if (body == null) {
+      throw Exception('Missing refresh token response body');
+    }
+
+    return GitHubAuthSession.fromTokenResponse(body);
   }
 
   Future<GitHubUser> fetchCurrentUser() async {

@@ -1,20 +1,22 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:github_client/models/github_auth_session.dart';
 import 'package:github_client/models/github_user.dart';
 import 'package:github_client/providers/auth_provider.dart';
+import 'package:github_client/services/auth/auth_session_service.dart';
 import 'package:github_client/services/auth/github_oauth_service.dart';
 import 'package:github_client/services/storage/secure_storage_service.dart';
 
 class FakeGitHubOAuthService extends GitHubOAuthService {
-  FakeGitHubOAuthService({this.tokenToReturn, this.userToReturn, this.error});
+  FakeGitHubOAuthService({this.sessionToReturn, this.userToReturn, this.error});
 
-  final String? tokenToReturn;
+  final GitHubAuthSession? sessionToReturn;
   final GitHubUser? userToReturn;
   final Object? error;
 
   @override
-  Future<String> signIn() async {
+  Future<GitHubAuthSession> signIn() async {
     if (error != null) throw error!;
-    return tokenToReturn!;
+    return sessionToReturn!;
   }
 
   @override
@@ -25,26 +27,26 @@ class FakeGitHubOAuthService extends GitHubOAuthService {
 }
 
 class FakeSecureStorageService extends SecureStorageService {
-  FakeSecureStorageService({this.initialToken});
+  FakeSecureStorageService({this.initialSession});
 
-  String? initialToken;
-  String? storedToken;
+  GitHubAuthSession? initialSession;
+  GitHubAuthSession? storedSession;
   String? storedLocaleCode;
 
   @override
-  Future<void> writeAccessToken(String token) async {
-    storedToken = token;
+  Future<void> writeAuthSession(GitHubAuthSession session) async {
+    storedSession = session;
   }
 
   @override
-  Future<String?> readAccessToken() async {
-    return storedToken ?? initialToken;
+  Future<GitHubAuthSession?> readAuthSession() async {
+    return storedSession ?? initialSession;
   }
 
   @override
-  Future<void> deleteAccessToken() async {
-    storedToken = null;
-    initialToken = null;
+  Future<void> deleteAuthSession() async {
+    storedSession = null;
+    initialSession = null;
   }
 
   @override
@@ -64,6 +66,12 @@ class FakeSecureStorageService extends SecureStorageService {
 }
 
 void main() {
+  final session = GitHubAuthSession(
+    accessToken: 'token',
+    accessTokenExpiresAt: DateTime.utc(2026, 4, 24, 12),
+    refreshToken: 'refresh-token',
+    refreshTokenExpiresAt: DateTime.utc(2026, 5, 24, 12),
+  );
   const user = GitHubUser(
     login: 'octocat',
     name: 'The Octocat',
@@ -83,10 +91,10 @@ void main() {
     expect(provider.user, isNull);
   });
 
-  test('initialize restores user from stored token', () async {
+  test('initialize restores user from stored session', () async {
     final provider = AuthProvider(
       authService: FakeGitHubOAuthService(userToReturn: user),
-      storageService: FakeSecureStorageService(initialToken: 'stored-token'),
+      storageService: FakeSecureStorageService(initialSession: session),
     );
 
     await provider.initialize();
@@ -95,11 +103,11 @@ void main() {
     expect(provider.user?.login, 'octocat');
   });
 
-  test('signIn stores token and user on success', () async {
+  test('signIn stores full session and user on success', () async {
     final storage = FakeSecureStorageService();
     final provider = AuthProvider(
       authService: FakeGitHubOAuthService(
-        tokenToReturn: 'token',
+        sessionToReturn: session,
         userToReturn: user,
       ),
       storageService: storage,
@@ -109,7 +117,7 @@ void main() {
 
     expect(provider.isAuthenticated, isTrue);
     expect(provider.user?.login, 'octocat');
-    expect(storage.storedToken, 'token');
+    expect(storage.storedSession, session);
   });
 
   test('signOut clears user and token', () async {
@@ -117,7 +125,7 @@ void main() {
     var didClearApiCache = false;
     final provider = AuthProvider(
       authService: FakeGitHubOAuthService(
-        tokenToReturn: 'token',
+        sessionToReturn: session,
         userToReturn: user,
       ),
       storageService: storage,
@@ -131,7 +139,27 @@ void main() {
 
     expect(provider.isAuthenticated, isFalse);
     expect(provider.user, isNull);
-    expect(storage.storedToken, isNull);
+    expect(storage.storedSession, isNull);
     expect(didClearApiCache, isTrue);
+  });
+
+  test('provider signs out when session service invalidates auth', () async {
+    final storage = FakeSecureStorageService(initialSession: session);
+    final authSessionService = AuthSessionService(
+      storageService: storage,
+      refreshSession: (_) async => session,
+    );
+    final provider = AuthProvider(
+      authService: FakeGitHubOAuthService(userToReturn: user),
+      storageService: storage,
+      authSessionService: authSessionService,
+    );
+
+    await provider.initialize();
+    await authSessionService.clearSession(notify: true);
+
+    expect(provider.isAuthenticated, isFalse);
+    expect(provider.user, isNull);
+    expect(storage.storedSession, isNull);
   });
 }
